@@ -1,9 +1,13 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
+
 import os
 import json
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
-
-TOKEN = os.getenv("TOKEN")  # Render environment variable orqali tokenni o‘qiydi
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
