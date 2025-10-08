@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from dotenv import load_dotenv
 
-# .env fayldan tokenni olish
+# Загружаем токен из .env или из переменных окружения Render
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
@@ -15,45 +15,45 @@ dp = Dispatcher()
 DATA_FILE = "data.json"
 
 
-# === FAYL BILAN ISHLASH FUNKSIYALARI ===
+# === Работа с файлом статистики ===
 def load_data():
     try:
-        with open(DATA_FILE, "r") as f:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     except:
         return {"admin_id": None, "invites": {}}
 
 
 def save_data(data):
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
 
 data = load_data()
 
 
-# === START KOMANDASI ===
+# === Команда /start ===
 @dp.message(Command("start"))
 async def start_cmd(message: types.Message):
     await message.reply(
-        "👋 Salom! Men guruh uchun hisoblovchi botman.\n\n"
-        "👤 Admin /setadmin buyrug‘i bilan o‘zini o‘rnatadi.\n"
-        "📊 Bot yangi a’zolarni hisoblaydi va statistika yuritadi."
+        "👋 Привет! Я бот для подсчёта приглашений в группу.\n\n"
+        "👤 Администратор должен установить себя командой /setadmin.\n"
+        "📊 После этого бот будет считать, кто сколько участников пригласил."
     )
 
 
-# === ADMIN O‘RNATISH ===
+# === Команда /setadmin ===
 @dp.message(Command("setadmin"))
 async def set_admin(message: types.Message):
     if message.from_user:
         data["admin_id"] = message.from_user.id
         save_data(data)
-        await message.reply("✅ Siz admin sifatida o‘rnatildingiz!")
+        await message.reply("✅ Вы успешно назначены администратором!")
 
 
-# === BOTNI ISHGA TUSHURISH ===
+# === Запуск бота ===
 async def main():
-    print("🤖 Bot ishga tushdi...")
+    print("🤖 Бот запущен и работает...")
     await dp.start_polling(bot)
 
 
